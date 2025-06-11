@@ -12,8 +12,11 @@ const userSlice = createSlice({
       //^here we cannot call api
       state.users = action.payload;
     },
+    removeuser: (state, action) => {
+      state.users = null;
+    },
   },
 });
 
-export const { loadUser } = userSlice.actions;
+export const { loadUser, removeuser } = userSlice.actions;
 export default userSlice.reducer;

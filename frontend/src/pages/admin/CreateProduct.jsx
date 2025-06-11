@@ -2,6 +2,8 @@ import { nanoid } from "nanoid";
 import { useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { asyncCreateProduct } from "../../store/actions/productActions";
+import { toast } from "react-toastify";
 
 const CreateProduct = () => {
   const { register, reset, handleSubmit } = useForm();
@@ -11,9 +13,9 @@ const CreateProduct = () => {
   const CreateProductHandler = (product) => {
     product.id = nanoid();
 
-    dispatch(asyncRegisterUser(product));
-
-    navigate("/login");
+    dispatch(asyncCreateProduct(product));
+    toast.success("product created!");
+    navigate("/products");
   };
 
   return (
@@ -52,7 +54,7 @@ const CreateProduct = () => {
         placeholder="category"
       />
       <button className="mb-3 text-gray-200 px-10 py-2 font-black bg-blue-400 rounded">
-        Create
+        Create Product
       </button>
     </form>
   );

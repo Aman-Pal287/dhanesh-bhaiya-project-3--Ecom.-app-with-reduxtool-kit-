@@ -1,5 +1,6 @@
+import { toast } from "react-toastify";
 import axios from "../../api/axiosconfig";
-import { loadUser } from "../reducers/userSlice";
+import { loadUser, removeuser } from "../reducers/userSlice";
 
 export const asyncCurrentUser = (user) => async (dispatch, getState) => {
   try {
@@ -14,7 +15,10 @@ export const asyncCurrentUser = (user) => async (dispatch, getState) => {
 export const asyncLogoutUser = () => async (dispatch, getState) => {
   try {
     localStorage.removeItem("user");
+    dispatch(removeuser())
     console.log("User Logget Out!");
+    toast.error("Logged Out!");
+
   } catch (error) {
     console.log(error);
   }
