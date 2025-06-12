@@ -5,14 +5,24 @@
       "username": "aman",
       "email": "amam@123.com",
       "password": "1234",
-      "isAdmin": true
+      "isAdmin": true,
+      "cart": []
     },
     {
       "id": "P05DJMqKHeUt1AG_GBwlw",
       "username": "gkg",
       "email": "gkg@gkg.com",
       "password": "1234",
-      "isAdmin": true
+      "isAdmin": true,
+      "cart": []
+    },
+    {
+      "id": "eaxI0af5HdqocjIYos4tj",
+      "username": "shubham",
+      "email": "shubham@123.com",
+      "password": "1234",
+      "isAdmin": false,
+      "cart": []
     }
   ],
   "products": [
@@ -23,7 +33,30 @@
       "description": "Your perfect pack for everyday use and walks in the forest. Stash your laptop (up to 15 inches) in the padded sleeve, your everyday",
       "category": "men's clothing",
       "image": "https://fakestoreapi.com/img/81fPKd-2AYL._AC_SL1500_.jpg"
+    },
+    {
+      "id": "aKdJ2TXPSI9m1NxICsmSY",
+      "image": "https://cdn.dummyjson.com/recipe-images/1.webp",
+      "title": "pizza",
+      "price": "500",
+      "description": "margerita",
+      "category": "lunch"
+    },
+    {
+      "id": "vr7xJygUA0snXoEuV8Add",
+      "image": "https://images.unsplash.com/photo-1652862730477-8082e33a7b45?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "title": "kela",
+      "price": "500",
+      "description": "kela ke tham par",
+      "category": "food"
+    },
+    {
+      "id": "PzeR2UrEJzNRz8nSoqTtb",
+      "image": "https://cdn.dummyjson.com/recipe-images/5.webp",
+      "title": "shoe",
+      "price": "8000",
+      "description": "kuch bhi nhi",
+      "category": "wera"
     }
-  ],
-  "carts": []
+  ]
 }

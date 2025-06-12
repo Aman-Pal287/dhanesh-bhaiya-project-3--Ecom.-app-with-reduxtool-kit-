@@ -15,7 +15,7 @@ const CreateProduct = () => {
 
     dispatch(asyncCreateProduct(product));
     toast.success("product created!");
-    navigate("/products");
+    navigate("/");
   };
 
   return (

@@ -13,11 +13,12 @@ const Register = () => {
   const RegisterHandler = (user) => {
     user.id = nanoid();
     user.isAdmin = false;
+    user.cart = [];
     console.log(user);
     dispatch(asyncRegisterUser(user));
     reset();
     navigate("/login");
-    toast.success("user registered")
+    toast.success("user registered");
   };
 
   return (

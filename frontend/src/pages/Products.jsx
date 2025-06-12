@@ -1,8 +1,28 @@
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import { asyncUpdateUser } from "../store/actions/userActions";
 
 const Products = () => {
-  const products = useSelector((state) => state.productReducer.products);
+  // const products = useSelector((state) => state.productReducer.products);
+  const dispatch = useDispatch();
+
+  const {
+    userReducer: { users },
+    productReducer: { products },
+  } = useSelector((state) => state);
+
+  const AddtoCartHandler = (id, product) => {
+    // const copyUser = { ...users, cart: [...users.cart] }; //!shallow copy and deep copy yeh sir ka logic hai iss se problem aa rhi thi and niche wla deep copy mera dimag ka hai toh use tarike se deep deep copy karne se mera kaam ban gya
+    let copyUser = JSON.parse(JSON.stringify(users)); //! pure deep copy
+    const x = copyUser.cart.findIndex((c) => c?.productId == id);
+
+    if (x == -1) {
+      copyUser.cart.push({ productId: id, quantity: 1, product });
+    } else {
+      copyUser.cart[x].quantity += 1;
+    }
+    dispatch(asyncUpdateUser(copyUser.id, copyUser));
+  };
 
   const renderProduct = products.map((product) => {
     return (
@@ -21,7 +41,10 @@ const Products = () => {
         </p>
         <div className="flex justify-between items-center">
           <p className="text-green-300">$ {product.price}</p>
-          <button className=" text-white bg-blue-500 w-fit px-4 py-2 rounded-xl ">
+          <button
+            onClick={() => AddtoCartHandler(product.id, product)}
+            className=" text-white bg-blue-500 w-fit px-4 py-2 rounded-xl "
+          >
             Add to cart
           </button>
         </div>

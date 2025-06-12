@@ -15,6 +15,7 @@ const Nav = () => {
           )}
 
           <NavLink to="/admin/user-profile">Settings</NavLink>
+          <NavLink to="/cart">Cart</NavLink>
         </>
       ) : (
         <>
