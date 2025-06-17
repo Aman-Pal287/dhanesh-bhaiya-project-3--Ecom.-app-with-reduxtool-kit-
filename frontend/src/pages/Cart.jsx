@@ -49,7 +49,7 @@ const Cart = () => {
         <div className="details gap-5 flex flex-col">
           <h1>{c.product.title}</h1>
           <h1>{c.product.description.slice(0, 90)} ...</h1>
-          <h1 className="text-green-400">${c.product.price}</h1>
+          <h1 className="text-g reen-400">${c.product.price}</h1>
         </div>
         <div className="flex justify-center items-center gap-3">
           <button

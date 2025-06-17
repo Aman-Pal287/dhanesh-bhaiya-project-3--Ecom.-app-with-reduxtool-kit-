@@ -28,10 +28,10 @@ const Products = () => {
     return (
       <div
         key={product.id}
-        className="flex flex-col justify-between gap-2 shrink-0  w-[20vw] border shadow mb-2 mr-5"
+        className="flex flex-col justify-between gap-2 shrink-0  w-[300px] h-[450px] border shadow mb-2 mr-5"
       >
-        <div className="w-full aspect-square overflow-hidden">
-          <img className="w-full  object-cover" src={product.image} alt="" />
+        <div className="w-full h-[50%] aspect-square overflow-hidden">
+          <img className="width-full object-cover" src={product.image} alt="" />
         </div>
 
         <h1 className="font-black">{product.title}</h1>
@@ -60,7 +60,9 @@ const Products = () => {
   });
 
   return products.length > 0 ? (
-    <div className="overflow-auto width-[100vw] flex ">{renderProduct}</div>
+    <div className="flex-wrap gap-5 overflow-auto width-[100%] flex items-center justify-center ">
+      {renderProduct}
+    </div>
   ) : (
     "loading"
   );

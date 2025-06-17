@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import Mainroutes from "./routes/Mainroutes";
 import Nav from "./components/Nav";
 import { asyncCurrentUser } from "./store/actions/userActions";
