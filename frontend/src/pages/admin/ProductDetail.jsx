@@ -4,8 +4,11 @@ import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import { asyncUpdateProduct } from "../../store/actions/productActions";
 import { asyncDeleteProduct } from "../../store/actions/productActions";
+import { asyncUpdateUser } from "../../store/actions/userActions";
 
 const ProductDetail = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { id } = useParams();
   const {
     productReducer: { products },
@@ -23,8 +26,6 @@ const ProductDetail = () => {
       category: product?.category,
     },
   });
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
 
   const UpdateProductHandler = (product) => {
     dispatch(asyncUpdateProduct(id, product));
@@ -36,6 +37,18 @@ const ProductDetail = () => {
     navigate("/products");
   };
 
+  const AddtoCartHandler = (id, product) => {
+    // const copyUser = { ...users, cart: [...users.cart] }; //!shallow copy and deep copy yeh sir ka logic hai iss se problem aa rhi thi and niche wla deep copy mera dimag ka hai toh use tarike se deep deep copy karne se mera kaam ban gya
+    let copyUser = JSON.parse(JSON.stringify(users)); //! pure deep copy
+    const x = copyUser.cart.findIndex((c) => c?.productId == id);
+
+    if (x == -1) {
+      copyUser.cart.push({ productId: id, quantity: 1, product });
+    } else {
+      copyUser.cart[x].quantity += 1;
+    }
+    dispatch(asyncUpdateUser(copyUser.id, copyUser));
+  };
   return product ? (
     <div className="overflow-x-auto">
       <div className="flex gap-5">
@@ -50,7 +63,12 @@ const ProductDetail = () => {
             price : ${product?.price}
           </h2>
           <p>{product?.description}</p>
-          <button className="px-4 py-2 bg-blue-500 mt-5">Add to cart</button>
+          <button
+            onClick={() => AddtoCartHandler(product.id, product)}
+            className=" text-white bg-blue-500 w-fit px-4 py-2 rounded-xl "
+          >
+            Add to cart
+          </button>
         </div>
       </div>
 

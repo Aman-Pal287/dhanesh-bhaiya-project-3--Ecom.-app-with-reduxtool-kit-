@@ -1,15 +1,39 @@
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { asyncUpdateUser } from "../store/actions/userActions";
+import { useEffect, useState } from "react";
+import axios from "../api/axiosconfig";
+import InfiniteScroll from "react-infinite-scroll-component";
+import { Suspense } from "react";
 
 const Products = () => {
-  // const products = useSelector((state) => state.productReducer.products);
   const dispatch = useDispatch();
 
-  const {
-    userReducer: { users },
-    productReducer: { products },
-  } = useSelector((state) => state);
+  const users = useSelector((state) => state.userReducer.users);
+  // const products = useSelector((state) => state.productReducer.products);
+  const [products, setProducts] = useState([]);
+  const [hasMore, setHasMore] = useState(true);
+
+  const fetchProducts = async () => {
+    try {
+      const { data } = await axios.get(
+        `/products?_limit=6&_start=${products.length}`
+      );
+      // console.log(data);
+      if (data.length == 0) {
+        setHasMore(false);
+      } else {
+        setHasMore(true);
+        setProducts([...products, ...data]);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    fetchProducts();
+  }, []);
 
   const AddtoCartHandler = (id, product) => {
     // const copyUser = { ...users, cart: [...users.cart] }; //!shallow copy and deep copy yeh sir ka logic hai iss se problem aa rhi thi and niche wla deep copy mera dimag ka hai toh use tarike se deep deep copy karne se mera kaam ban gya
@@ -59,12 +83,24 @@ const Products = () => {
     );
   });
 
-  return products.length > 0 ? (
-    <div className="flex-wrap gap-5 overflow-auto width-[100%] flex items-center justify-center ">
-      {renderProduct}
-    </div>
-  ) : (
-    "loading"
+  return (
+    <InfiniteScroll
+      dataLength={products.length}
+      next={fetchProducts}
+      hasMore={hasMore}
+      loader={<h4>Loading...</h4>}
+      endMessage={<p className="text-center">Yay! You have seen it all</p>}
+    >
+      <div className="flex flex-wrap justify-center items-center gap-5">
+        <Suspense
+          fallback={
+            <h1 className="text-center text-5xl text-yellow-400">LOADING...</h1>
+          }
+        >
+          {renderProduct}
+        </Suspense>
+      </div>
+    </InfiniteScroll>
   );
 };
 
