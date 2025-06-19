@@ -1,36 +1,16 @@
 import { motion, AnimatePresence } from "framer-motion";
-import { lazy, useEffect, useState } from "react";
+import { lazy, useState } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { Suspense } from "react";
-import axios from "../api/axiosconfig";
+import useInfiniteProducts from "../utils/useInfiniteProducts";
+
 const ProductTemplate = lazy(() => import("../components/ProductTemplate"));
 
 const Products = () => {
-  const [product, setProduct] = useState([]);
-  const [hasMore, setHasMore] = useState(true);
+  const { product, hasMore, fetchProducts } = useInfiniteProducts();
 
   const [addedProduct, setAddedProduct] = useState(null);
   const [showAdded, setShowAdded] = useState(false);
-  const fetchProducts = async () => {
-    try {
-      const { data } = await axios.get(
-        `/products?_limit=6&_start=${product.length}`
-      );
-      // console.log(data);
-      if (data.length == 0) {
-        setHasMore(false);
-      } else {
-        setHasMore(true);
-        setProduct([...product, ...data]);
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  useEffect(() => {
-    fetchProducts();
-  }, []);
 
   return (
     <InfiniteScroll
