@@ -5,7 +5,7 @@ import { toast } from "react-toastify";
 import { asyncUpdateProduct, asyncDeleteProduct } from "../../store/actions/productActions";
 import { asyncUpdateUser } from "../../store/actions/userActions";
 import { motion } from "framer-motion";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import ReactModal from 'react-modal';
 
 // Set app element for accessibility
@@ -18,7 +18,7 @@ const ProductDetail = () => {
     userReducer: { users },
   } = useSelector((state) => state);
   
-  const product = products?.find((p) => p.id == id);
+  const [currentProduct, setCurrentProduct] = useState(null);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -28,15 +28,20 @@ const ProductDetail = () => {
   const [formData, setFormData] = useState(null);
 
   // Form handling
-  const { register, handleSubmit, reset } = useForm({
-    defaultValues: {
-      title: product?.title,
-      image: product?.image,
-      price: product?.price,
-      description: product?.description,
-      category: product?.category,
-    },
-  });
+  const { register, handleSubmit, reset, setValue } = useForm();
+
+  // Initialize form with product data
+  useEffect(() => {
+    const product = products?.find((p) => p.id == id);
+    if (product) {
+      setCurrentProduct(product);
+      setValue("title", product.title);
+      setValue("image", product.image);
+      setValue("price", product.price);
+      setValue("description", product.description);
+      setValue("category", product.category);
+    }
+  }, [products, id, setValue]);
 
   // Update product
   const updateProduct = (data) => {
@@ -44,14 +49,21 @@ const ProductDetail = () => {
     setShowUpdateModal(true);
   };
 
-  const confirmUpdate = () => {
-    dispatch(asyncUpdateProduct(id, formData));
-    toast.success("Product updated successfully!", {
-      position: "top-center",
-      theme: "colored"
-    });
-    setShowUpdateModal(false);
-    reset();
+  const confirmUpdate = async () => {
+    try {
+      const updatedProduct = await dispatch(asyncUpdateProduct(id, formData));
+      setCurrentProduct(updatedProduct);
+      toast.success("Product updated successfully!", {
+        position: "top-center",
+        theme: "colored"
+      });
+      setShowUpdateModal(false);
+    } catch (error) {
+      toast.error("Failed to update product", {
+        position: "top-center",
+        theme: "colored"
+      });
+    }
   };
 
   // Delete product
@@ -59,14 +71,21 @@ const ProductDetail = () => {
     setShowDeleteModal(true);
   };
 
-  const confirmDelete = () => {
-    dispatch(asyncDeleteProduct(id));
-    toast.error("Product deleted!", {
-      position: "top-center",
-      theme: "colored"
-    });
-    setShowDeleteModal(false);
-    navigate("/"); // Redirect to home page after delete
+  const confirmDelete = async () => {
+    try {
+      await dispatch(asyncDeleteProduct(id));
+      toast.error("Product deleted!", {
+        position: "top-center",
+        theme: "colored"
+      });
+      setShowDeleteModal(false);
+      navigate("/");
+    } catch (error) {
+      toast.error("Failed to delete product", {
+        position: "top-center",
+        theme: "colored"
+      });
+    }
   };
 
   // Add to cart handler
@@ -88,12 +107,12 @@ const ProductDetail = () => {
       userCopy.cart.push({ 
         productId: id, 
         quantity: 1, 
-        product 
+        product: currentProduct 
       });
     }
 
     dispatch(asyncUpdateUser(userCopy.id, userCopy));
-    toast.success(`${product.title} added to cart!`, {
+    toast.success(`${currentProduct.title} added to cart!`, {
       position: "bottom-right",
       theme: "colored"
     });
@@ -109,7 +128,6 @@ const ProductDetail = () => {
       return;
     }
 
-    // Add to cart first
     const userCopy = JSON.parse(JSON.stringify(users));
     const itemIndex = userCopy.cart.findIndex(item => item.productId == id);
 
@@ -119,7 +137,7 @@ const ProductDetail = () => {
       userCopy.cart.push({ 
         productId: id, 
         quantity: 1, 
-        product 
+        product: currentProduct 
       });
     }
 
@@ -132,7 +150,7 @@ const ProductDetail = () => {
   };
 
   // Loading state
-  if (!product) return (
+  if (!currentProduct) return (
     <div className="flex justify-center items-center h-screen bg-gradient-to-br from-gray-50 to-gray-100">
       <motion.div
         animate={{ rotate: 360 }}
@@ -165,8 +183,8 @@ const ProductDetail = () => {
           >
             <motion.img
               className="w-full h-auto max-h-[500px] object-contain"
-              src={product.image}
-              alt={product.title}
+              src={currentProduct.image}
+              alt={currentProduct.title}
               whileHover={{ scale: 1.05 }}
               transition={{ duration: 0.3 }}
             />
@@ -185,7 +203,7 @@ const ProductDetail = () => {
               animate={{ opacity: 1 }}
               transition={{ delay: 0.2 }}
             >
-              {product.title}
+              {currentProduct.title}
             </motion.h1>
             
             <motion.p 
@@ -194,7 +212,7 @@ const ProductDetail = () => {
               animate={{ opacity: 1 }}
               transition={{ delay: 0.3 }}
             >
-              {product.description}
+              {currentProduct.description}
             </motion.p>
             
             <div className="flex items-center gap-4 mb-8">
@@ -204,7 +222,7 @@ const ProductDetail = () => {
                 animate={{ scale: 1 }}
                 transition={{ delay: 0.4 }}
               >
-                ${product.price}
+                ${currentProduct.price}
               </motion.span>
               <motion.span
                 className="text-sm text-gray-500 bg-gray-100 px-3 py-1 rounded-full"
@@ -212,7 +230,7 @@ const ProductDetail = () => {
                 animate={{ scale: 1 }}
                 transition={{ delay: 0.5 }}
               >
-                {product.category}
+                {currentProduct.category}
               </motion.span>
             </div>
 
@@ -402,7 +420,7 @@ const ProductDetail = () => {
         </ReactModal>
       </div>
 
-      {/* Add these styles to your global CSS */}
+      {/* Modal Styles */}
       <style jsx global>{`
         .modal {
           position: fixed;
