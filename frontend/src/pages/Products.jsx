@@ -1,37 +1,18 @@
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { asyncUpdateUser } from "../store/actions/userActions";
-import { motion, AnimatePresence } from "framer-motion";
-import { useState } from "react";
 
 const Products = () => {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
+
   const {
     userReducer: { users },
     productReducer: { products },
   } = useSelector((state) => state);
-  const [showAdded, setShowAdded] = useState(false);
-  const [addedProduct, setAddedProduct] = useState(null);
 
-  const handleCardClick = (id, e) => {
-    // Check if click was on the Add to Cart button
-    if (e.target.closest('button[data-action="add-to-cart"]')) {
-      return; // Don't navigate if Add to Cart was clicked
-    }
-    navigate(`/product/${id}`);
-  };
-
-  const AddtoCartHandler = (id, product, e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    
-    if (!users) {
-      navigate('/login');
-      return;
-    }
-
-    let copyUser = JSON.parse(JSON.stringify(users));
+  const AddtoCartHandler = (id, product) => {
+    // const copyUser = { ...users, cart: [...users.cart] }; //!shallow copy and deep copy yeh sir ka logic hai iss se problem aa rhi thi and niche wla deep copy mera dimag ka hai toh use tarike se deep deep copy karne se mera kaam ban gya
+    let copyUser = JSON.parse(JSON.stringify(users)); //! pure deep copy
     const x = copyUser.cart.findIndex((c) => c?.productId == id);
 
     if (x == -1) {
@@ -116,47 +97,12 @@ const Products = () => {
     </motion.div>
   ));
 
-  return (
-    <div className="min-h-screen bg-gray-50 py-8 px-4 sm:px-6 lg:px-8">
-      <motion.div 
-        className="max-w-7xl mx-auto"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.5 }}
-      >
-        <h1 className="text-3xl font-bold text-gray-800 mb-8 text-center">Our Products</h1>
-        
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {renderProduct}
-        </div>
-
-        <AnimatePresence>
-          {showAdded && (
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 20 }}
-              transition={{ duration: 0.3 }}
-              className="fixed bottom-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg flex items-center"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-              </svg>
-              {addedProduct} added to cart!
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </motion.div>
-
-      {products.length === 0 && (
-        <div className="min-h-screen flex items-center justify-center">
-          <div className="text-center">
-            <div className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto"></div>
-            <p className="mt-4 text-gray-600">Loading products...</p>
-          </div>
-        </div>
-      )}
+  return products.length > 0 ? (
+    <div className="flex-wrap gap-5 overflow-auto width-[100%] flex items-center justify-center ">
+      {renderProduct}
     </div>
+  ) : (
+    "loading"
   );
 };
 

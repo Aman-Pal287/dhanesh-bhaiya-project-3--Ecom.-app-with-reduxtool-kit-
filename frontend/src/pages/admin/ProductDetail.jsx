@@ -4,10 +4,10 @@ import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import { asyncUpdateProduct } from "../../store/actions/productActions";
 import { asyncDeleteProduct } from "../../store/actions/productActions";
-import { motion, AnimatePresence } from "framer-motion";
-import { asyncUpdateUser } from "../../store/actions/userActions";
 
 const ProductDetail = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { id } = useParams();
   const {
     productReducer: { products },
@@ -28,172 +28,36 @@ const ProductDetail = () => {
       category: product?.category,
     },
   });
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
-  // Update product
-  const UpdateProductHandler = (updatedProduct) => {
-    dispatch(asyncUpdateProduct(id, updatedProduct));
-    toast.success("Product updated successfully!");
-    reset();
+  const UpdateProductHandler = (product) => {
+    dispatch(asyncUpdateProduct(id, product));
+    toast.success("product updated!");
+  };
+  const DeleteHandler = (product) => {
+    dispatch(asyncDeleteProduct(id));
+    toast.error("product deleted!");
+    navigate("/products");
   };
 
-  // Delete product
-  const DeleteHandler = () => {
-    if(window.confirm("Are you sure you want to delete this product?")) {
-      dispatch(asyncDeleteProduct(id));
-      toast.error("Product deleted!");
-      navigate("/products");
-    }
-  };
-
-  // Add to cart
-  const addToCart = () => {
-    if (!users) {
-      toast.info("Please login to add items to cart");
-      navigate("/login");
-      return;
-    }
-
-    const userCopy = JSON.parse(JSON.stringify(users));
-    const existingItem = userCopy.cart.find(item => item.productId == id);
-
-    if (existingItem) {
-      existingItem.quantity += 1;
-    } else {
-      userCopy.cart.push({ 
-        productId: id, 
-        quantity: 1, 
-        product: product 
-      });
-    }
-
-    dispatch(asyncUpdateUser(userCopy.id, userCopy));
-    toast.success(`${product.title} added to cart!`);
-  };
-
-  // Buy Now function
-  const buyNow = () => {
-    if (!users) {
-      toast.info("Please login to proceed to checkout");
-      navigate("/login");
-      return;
-    }
-
-    // First add to cart
-    const userCopy = JSON.parse(JSON.stringify(users));
-    const existingItem = userCopy.cart.find(item => item.productId == id);
-
-    if (existingItem) {
-      existingItem.quantity += 1;
-    } else {
-      userCopy.cart.push({ 
-        productId: id, 
-        quantity: 1, 
-        product: product 
-      });
-    }
-
-    dispatch(asyncUpdateUser(userCopy.id, userCopy));
-    
-    // Then navigate to checkout
-    navigate("/checkout");
-    toast.success("Proceeding to checkout!");
-  };
-
-  if (!product) return (
-    <div className="flex justify-center items-center h-screen bg-gradient-to-br from-gray-50 to-gray-100">
-      <motion.div
-        animate={{ 
-          rotate: 360,
-          scale: [1, 1.2, 1]
-        }}
-        transition={{ 
-          repeat: Infinity, 
-          duration: 1.5,
-          ease: "linear"
-        }}
-        className="h-20 w-20 rounded-full border-4 border-t-blue-500 border-r-blue-500 border-b-transparent border-l-transparent"
-      />
-    </div>
-  );
-
-  return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.5 }}
-      className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 py-12 px-4 sm:px-6 lg:px-8"
-    >
-      {/* Product Display Section */}
-      <div className="max-w-7xl mx-auto">
-        <div className="flex flex-col lg:flex-row gap-12 mb-16">
-          {/* Product Image */}
-          <motion.div 
-            className="lg:w-1/2 bg-white p-8 rounded-2xl shadow-lg"
-            initial={{ x: -50 }}
-            animate={{ x: 0 }}
-            transition={{ type: "spring", stiffness: 100 }}
-          >
-            <div className="relative h-full min-h-[400px]">
-              <motion.img
-                className="w-full h-full object-contain"
-                src={product.image}
-                alt={product.title}
-                whileHover={{ scale: 1.05 }}
-                transition={{ duration: 0.3 }}
-              />
-            </div>
-          </motion.div>
-
-          {/* Product Info */}
-          <motion.div 
-            className="lg:w-1/2 bg-white p-8 rounded-2xl shadow-lg"
-            initial={{ y: 50 }}
-            animate={{ y: 0 }}
-            transition={{ type: "spring", stiffness: 100 }}
-          >
-            <motion.h1 
-              className="text-4xl font-extrabold text-gray-900 mb-6"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.2 }}
-            >
-              {product.title}
-            </motion.h1>
-            
-            <motion.div 
-              className="mb-8"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.3 }}
-            >
-              <p className="text-lg text-gray-700 leading-relaxed">
-                {product.description}
-              </p>
-            </motion.div>
-            
-            <div className="flex flex-wrap items-center gap-6 mb-8">
-              <motion.div
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-                transition={{ delay: 0.4 }}
-                className="px-6 py-3 bg-gradient-to-r from-green-400 to-green-500 rounded-full shadow-md"
-              >
-                <span className="text-2xl font-bold text-white">
-                  ${product.price}
-                </span>
-              </motion.div>
-              
-              <motion.div
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-                transition={{ delay: 0.5 }}
-                className="px-4 py-2 bg-gray-100 rounded-full"
-              >
-                <span className="text-sm font-medium text-gray-700">
-                  {product.category}
-                </span>
-              </motion.div>
-            </div>
+  return product ? (
+    <div className="overflow-x-auto">
+      <div className="flex gap-5">
+        <img
+          className="w-1/2 h-[50vh] object-cover object-center"
+          src={product?.image}
+          alt=""
+        />
+        <div className="w-1/2 h-1/2">
+          <h1 className="text-2xl font-black  mb-5">{product?.title}</h1>
+          <h2 className="text-xl text-green-400 mb-5">
+            price : ${product?.price}
+          </h2>
+          <p>{product?.description}</p>
+          <button className="px-4 py-2 bg-blue-500 mt-5">Add to cart</button>
+        </div>
+      </div>
 
             <div className="flex flex-col sm:flex-row gap-4">
               <motion.button

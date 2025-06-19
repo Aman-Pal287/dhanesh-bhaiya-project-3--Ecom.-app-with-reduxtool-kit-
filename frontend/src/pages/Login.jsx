@@ -8,7 +8,6 @@ const Login = () => {
   const navigate = useNavigate();
   const LoginHandler = (user) => {
     dispatch(asyncLoginUser(user));
-    navigate("/");
   };
 
   return (
