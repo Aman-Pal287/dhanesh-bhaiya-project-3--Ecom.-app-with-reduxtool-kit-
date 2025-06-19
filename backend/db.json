@@ -4,7 +4,7 @@
       "id": "P05DJMqKHeUt1AG_GBwlw",
       "username": "gkg",
       "email": "gkg@gkg.com",
-      "password": "1234",
+      "password": "123456",
       "isAdmin": true,
       "cart": [
         {
@@ -35,9 +35,9 @@
     },
     {
       "id": "eaxI0af5HdqocjIYos4tj",
-      "username": "shubham kumar",
+      "username": "Shubham Kumar Mahato",
       "email": "shubham@123.com",
-      "password": "1234",
+      "password": "123456",
       "isAdmin": false,
       "cart": [
         {
@@ -66,7 +66,7 @@
         },
         {
           "productId": "1",
-          "quantity": 17,
+          "quantity": 18,
           "product": {
             "id": "1",
             "title": "Fjallraven - Foldsack No. 1 Backpack, Fits 15 Laptops",
@@ -78,7 +78,7 @@
         },
         {
           "productId": "2",
-          "quantity": 15,
+          "quantity": 16,
           "product": {
             "id": "2",
             "title": "Mens Casual Premium Slim Fit T-Shirts ",
@@ -111,15 +111,35 @@
             "category": "jewelery",
             "image": "https://fakestoreapi.com/img/71pWzhdJNwL._AC_UL640_QL65_ML3_.jpg"
           }
+        },
+        {
+          "productId": "6",
+          "quantity": 1,
+          "product": {
+            "id": "6",
+            "title": "Solid Gold Petite Micropave ",
+            "price": 168,
+            "description": "Satisfaction Guaranteed. Return or exchange any order within 30 days.Designed and sold by Hafeez Center in the United States. Satisfaction Guaranteed. Return or exchange any order within 30 days.",
+            "category": "jewelery",
+            "image": "https://fakestoreapi.com/img/61sbMiUnoGL._AC_UL640_QL65_ML3_.jpg"
+          }
         }
       ]
+    },
+    {
+      "id": "q5nNw6yMXXkd8qmWRA-7G",
+      "username": "",
+      "email": "",
+      "password": "",
+      "isAdmin": false,
+      "cart": []
     }
   ],
   "products": [
     {
       "id": "1",
       "title": "Fjallraven - Foldsack No. 1 Backpack, Fits 15 Laptops",
-      "price": 109.95,
+      "price": "109.95",
       "description": "Your perfect pack for everyday use and walks in the forest. Stash your laptop (up to 15 inches) in the padded sleeve, your everyday",
       "category": "men's clothing",
       "image": "https://fakestoreapi.com/img/81fPKd-2AYL._AC_SL1500_.jpg"
@@ -275,6 +295,14 @@
       "description": "95%Cotton,5%Spandex, Features: Casual, Short Sleeve, Letter Print,V-Neck,Fashion Tees, The fabric is soft and has some stretch., Occasion: Casual/Office/Beach/School/Home/Street. Season: Spring,Summer,Autumn,Winter.",
       "category": "women's clothing",
       "image": "https://fakestoreapi.com/img/61pHAEJ4NML._AC_UX679_.jpg"
+    },
+    {
+      "id": "IRMfz-vpoEHEk-RAPJFTu",
+      "image": "https://fakestoreapi.com/img/81fPKd-2AYL._AC_SL1500_.jpg",
+      "title": "gv67",
+      "price": "656.99",
+      "description": "bgdfg vnbghft nby hgf",
+      "category": "hftr"
     }
   ]
 }
